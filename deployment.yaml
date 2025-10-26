@@ -20,6 +20,14 @@ spec:
     spec:
       containers:
         - name: second-nodejs-container
-          image: docker.io/pytsmarkiyan/kub-first-app:2
+          image: docker.io/pytsmarkiyan/kub-first-app:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+              # httpHeaders:
+            periodSeconds: 10
+            initialDelaySeconds: 10
         # - name: second-nodejs-container
         #   image: 
