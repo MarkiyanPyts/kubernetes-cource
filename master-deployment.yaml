@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    app: second-app
+    tier: backend
+  ports:
+    - protocol: 'TCP'
+      port: 80 # port which we expose outside
+      targetPort: 8080 # port inside our container which we want to map outside
+    # - protocol: 'TCP'
+    #   port: 443
+    #   targetPort: 443
+  # type: ClusterIP # Default Internally exposed IP, only accessible from the cluster
+  # type: NodePort # exposed on IP and port of the worker node
+  type: LoadBalancer # Outside World Access, in addition incoming traffic is equally distributed
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-app
+      tier: backend
+  template: 
+    metadata:
+      labels:
+        app: second-app
+        tier: backend
+    spec:
+      containers:
+        - name: second-nodejs-container
+          image: docker.io/pytsmarkiyan/kub-first-app:2
+        # - name: second-nodejs-container
+        #   image: 
